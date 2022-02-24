@@ -1,0 +1,66 @@
+//This quicksort function takes in an array pointer, the number of elements in that array, the size of each of those elements, and a user defined compare function. Within the function a pivot point is chosen which all the other elements in the array are compared to. By the end of one recursion, all of the elements greater than the pivot should end up to the right of the pivot and similarly all of the smaller elements should be to the left. The function then calls itself twice (once for the greater elements and the other for the elements that are less than the pivot). This continues until the whole array is sorted.
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <ctype.h>
+# include <math.h>
+# include <stdbool.h>
+# include <time.h>
+# include <string.h>
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#pragma warning(disable:4996)
+// don't have to use _s
+
+
+int Compare(const void *a, const void *b)
+// finds the greater of two integers
+{
+ return *((char*)a) - *((char*)b);
+}
+
+void quicksort(void *a, size_t numOfElements, const size_t size, int (*compare)(const void*, const void*))
+{
+ //void *high = a + size * (numOfElements - 1);
+ char *high = (char*)a + size * (numOfElements - 1); // high points to the last element in the array
+ char *x = high;
+ char *low = (char*)a + size;
+ char *pivot = (char*)a; // make a void pointer
+ if (low >= high)
+  return;
+ while (low < high)
+ {
+  while (low < high && compare(pivot, high) < 0)// checks if a[high] is greater than pivot
+   high -= size;
+  if (low >= high)
+   break;
+  //low += size;
+  while (low < high && compare(pivot, low) > 0) // checks if a[low] is less than or equal to pivot
+   low += size;
+  if (low >= high)
+   break;
+  char* high2 = (char*)malloc(size);
+  memcpy(high2, high, size);
+  memcpy(high, low, size);
+  memcpy(low, high2, size);
+  high -= size;
+  free(high2);
+ }
+ char* cpy = (char*)malloc(size);
+ memcpy(cpy, high, size);
+ memcpy(high, pivot, size);
+ memcpy(pivot, cpy, size);
+ free(cpy);
+ quicksort(a, (high - a) / size, size, compare);
+ quicksort(high + size, (x - high) / size, size, compare);
+} 
+
+int main(void)
+{
+ int a[] = { 'c', 'd', 'z'};
+ quicksort(a, 5, 1, Compare);
+ for (int i = 0; i <= 2; i++)
+  printf("%c ", a[i]);
+ system("pause");
+}
