@@ -1,0 +1,49 @@
+# include <stdio.h>
+# include <stdlib.h>
+# include <ctype.h>
+# include <math.h>
+# include <stdbool.h>
+# include <time.h>
+# include <string.h>
+
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#pragma warning(disable:4996)
+
+/*
+int fib(const int num)
+{
+	int arr[num + 1];
+	arr[1] = 0;
+	arr[2] = 1;
+	for (int i = 3; i <= num; i++)
+		arr[i] = arr[i - 1] + arr[i - 2];
+	return arr[num];
+}
+*/
+
+#define ARR_SIZE 100 #check size of nums inside or dynamically allocate
+int fib(const int num)
+{
+	static int arr[ARR_SIZE] = {0};   
+	if (arr[num])
+	{
+		return arr[num];
+	}
+	if (num <= 2)
+	{
+		arr[num] = 1;
+	}
+	else
+	{
+		arr[num] = fib(num - 1) + fib(num - 2);
+	}
+	return arr[num];
+}
+
+int main(void)
+{
+	printf("%d", fib(5));
+}
